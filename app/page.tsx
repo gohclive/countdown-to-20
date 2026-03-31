@@ -1,6 +1,6 @@
 import Hero from '@/components/Hero';
-import Details from '@/components/Details';
 import Gallery from '@/components/Gallery';
+import ThePlan from '@/components/ThePlan';
 import RSVPForm from '@/components/RSVPForm';
 import MusicToggle from '@/components/MusicToggle';
 
@@ -12,10 +12,10 @@ export default function Home() {
       <div className="relative">
         {/* Tulip Color Accents in the Background */}
         <div className="absolute top-0 inset-x-0 h-64 bg-gradient-to-b from-transparent to-pink-50/50 -z-10" />
-        <Details />
 
         <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-yellow-50/30 to-transparent -z-10" />
         <Gallery />
+        <ThePlan />
 
         <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-red-50/30 to-transparent -z-10" />
         <RSVPForm />

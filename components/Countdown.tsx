@@ -11,10 +11,10 @@ interface TimeLeft {
 
 export default function Countdown() {
   const calculateTimeLeft = useCallback(() => {
-    // Target date: April 20, 2026, at 10:00 AM Amsterdam Time (CET/CEST)
+    // Target date: April 20, 2026, at 00:00:00 Amsterdam Time (CET/CEST)
     // Amsterdam is UTC+1 (CET) or UTC+2 (CEST).
     // In April 2026, it will be CEST (UTC+2).
-    const targetDate = new Date('2026-04-20T10:00:00+02:00').getTime();
+    const targetDate = new Date('2026-04-20T00:00:00+02:00').getTime();
     const now = new Date().getTime();
     const difference = targetDate - now;
 
