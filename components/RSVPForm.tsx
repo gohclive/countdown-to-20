@@ -18,7 +18,7 @@ export default function RSVPForm() {
             Send Your Love
           </motion.h2>
           <p className="text-gray-600 font-sans tracking-wide leading-relaxed">
-            I would love to hear from you! Reach out to me directly on Telegram to share your well-wishes, 
+            I would love to hear from you! Reach out to me directly on Telegram to share your well-wishes,
             memories, and special moments.
           </p>
         </div>
