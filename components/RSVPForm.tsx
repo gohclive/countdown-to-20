@@ -15,7 +15,7 @@ export default function RSVPForm() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            Send Your Love
+            Help Me Surprise Her!!
           </motion.h2>
           <p className="text-gray-600 font-sans tracking-wide leading-relaxed">
             I would love to hear from you! Reach out to me directly on Telegram to share your well-wishes,
@@ -46,7 +46,7 @@ export default function RSVPForm() {
           </div>
 
           <p className="text-sm text-gray-500 italic font-sans px-4">
-            "Every message, every photo, and every voice note means the world to me."
+            "Every note,photo, video, inside-joke, will be part of a grand surprise. Let’s make her day unforgettable!
           </p>
 
           <a
