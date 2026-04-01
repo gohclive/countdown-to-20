@@ -15,10 +15,10 @@ export default function RSVPForm() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            Send Your Love
+            Write Her a Message
           </motion.h2>
           <p className="text-gray-600 font-sans tracking-wide">
-            We would love to hear from you! Share your well-wishes.
+            Leave Charlene a note — I&apos;ll surprise her with all of them on the day.
           </p>
         </div>
 
@@ -53,7 +53,7 @@ export default function RSVPForm() {
               name="message"
               required
               rows={4}
-              placeholder="Share your memories and well-wishes..."
+              placeholder="Write something to Charlene — a memory, a wish, a joke..."
               className="w-full px-5 py-3 border-2 border-[#d4af37]/20 rounded-xl focus:border-[#e63946] outline-none transition-all font-sans bg-gray-50/50 resize-none"
             />
           </div>
@@ -61,7 +61,7 @@ export default function RSVPForm() {
           {/* Upload Field */}
           <div className="group">
             <label htmlFor="upload" className="block text-sm font-semibold text-gray-700 mb-2 font-sans uppercase tracking-widest">
-              Upload a Special Memory (Photo, Video, or Audio)
+              Attach a Photo or Memory (Optional)
             </label>
             <div className="relative">
               <input
@@ -94,7 +94,7 @@ export default function RSVPForm() {
             className="w-full py-4 bg-[#e63946] text-white font-sans font-bold rounded-xl hover:bg-[#d62828] transition-all shadow-md transform hover:-translate-y-1 flex items-center justify-center gap-2"
           >
             <Send className="w-5 h-5" />
-            Send Your Love
+            Send My Message
           </button>
         </form>
       </div>

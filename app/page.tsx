@@ -1,13 +1,14 @@
 import Hero from '@/components/Hero';
+import InOnTheSecret from '@/components/InOnTheSecret';
 import Gallery from '@/components/Gallery';
 import ThePlan from '@/components/ThePlan';
 import RSVPForm from '@/components/RSVPForm';
-import MusicToggle from '@/components/MusicToggle';
 
 export default function Home() {
   return (
     <main className="min-h-screen relative">
       <Hero />
+      <InOnTheSecret />
 
       <div className="relative">
         {/* Tulip Color Accents in the Background */}
@@ -27,7 +28,6 @@ export default function Home() {
         </footer>
       </div>
 
-      <MusicToggle />
     </main>
   );
 }
