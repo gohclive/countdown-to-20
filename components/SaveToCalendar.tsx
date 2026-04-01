@@ -8,8 +8,9 @@ export default function SaveToCalendar() {
       title: 'A Beautiful Beginning - Save the Date',
       description: 'Marriage proposal at Keukenhof Gardens, Amsterdam.',
       location: 'Keukenhof Gardens, Amsterdam',
-      startTime: '20260420T100000',
-      endTime: '20260420T120000',
+      // 10:00–12:00 CEST (UTC+2) expressed as UTC
+      startTime: '20260420T080000Z',
+      endTime: '20260420T100000Z',
     };
 
     const icsContent = `BEGIN:VCALENDAR
@@ -17,9 +18,9 @@ VERSION:2.0
 PRODID:-//A Beautiful Beginning//Save the Date//EN
 BEGIN:VEVENT
 UID:${Date.now()}@abeautifulbeginning.com
-DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z
-DTSTART;TZID=Europe/Amsterdam:${event.startTime}
-DTEND;TZID=Europe/Amsterdam:${event.endTime}
+DTSTAMP:${new Date().toISOString().replace(/[-:.]/g, '').slice(0, 15)}Z
+DTSTART:${event.startTime}
+DTEND:${event.endTime}
 SUMMARY:${event.title}
 DESCRIPTION:${event.description}
 LOCATION:${event.location}

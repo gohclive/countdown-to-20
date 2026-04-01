@@ -15,7 +15,7 @@ export default function RSVPForm() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            Send Your Love
+            Write Her a Message
           </motion.h2>
           <p className="text-gray-600 font-sans tracking-wide leading-relaxed">
             I would love to hear from you! Reach out to me directly on Telegram to share your well-wishes,
