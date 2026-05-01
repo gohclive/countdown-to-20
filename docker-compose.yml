@@ -7,6 +7,8 @@ services:
     restart: unless-stopped
     ports:
       - "3000:3000"
+    env_file:
+      - .env.local
     environment:
       - NODE_ENV=production
       - NEXT_TELEMETRY_DISABLED=1
@@ -16,7 +18,7 @@ services:
     container_name: cloudflared-tunnel
     restart: unless-stopped
     command: tunnel run
-    environment:
-      - TUNNEL_TOKEN=YOUR_CLOUDFLARE_TUNNEL_TOKEN_HERE
+    env_file:
+      - .env.local
     depends_on:
       - app

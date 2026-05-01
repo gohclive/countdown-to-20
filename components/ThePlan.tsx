@@ -1,29 +1,15 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import {
-  Sunrise, Bus, Flower2, Search,
-  Sparkles, MessageSquareHeart, Gem, HeartHandshake,
-} from 'lucide-react';
 import React from 'react';
-
-const timeline = [
-  { time: '7:00 AM', title: 'Wake Up & Get Dressed',        description: 'Starting the day with a mix of nerves and excitement.',          icon: Sunrise,            color: '#f97316', bg: '#fff7ed' },
-  { time: '8:00 AM', title: 'Bus to Keukenhof',             description: 'A scenic ride through the Dutch countryside.',                   icon: Bus,                color: '#3b82f6', bg: '#eff6ff' },
-  { time: '9:00 AM', title: 'Walk Through the Gardens',     description: 'Taking in the tulip fields together.',                           icon: Flower2,            color: '#ec4899', bg: '#fdf2f8' },
-  { time: '9:30 AM', title: 'Find a Quiet Spot',            description: 'A peaceful corner just for the two of us.',                      icon: Search,             color: '#22c55e', bg: '#f0fdf4' },
-  { time: '9:45 AM', title: 'The Pokémon Card Surprise',    description: 'She thinks it\'s just a fun gift...',                            icon: Sparkles,           color: '#eab308', bg: '#fefce8' },
-  { time: '9:47 AM', title: 'A Few Words from the Heart',   description: 'Saying what I\'ve been wanting to say for a long time.',         icon: MessageSquareHeart, color: '#ef4444', bg: '#fef2f2' },
-  { time: '9:48 AM', title: 'Down on One Knee',             description: 'The moment everything changes.',                                 icon: Gem,                color: '#d4af37', bg: '#fffbeb' },
-  { time: '9:50 AM', title: 'She Says YES!',                description: 'And then the real adventure begins.',                            icon: HeartHandshake,     color: '#e63946', bg: '#fff1f2' },
-];
+import { timeline } from '@/lib/data';
 
 function StepCard({ item, globalIndex, delay }: {
   item: typeof timeline[0];
   globalIndex: number;
   delay: number;
 }) {
-  const isLast = globalIndex === 7;
+  const isLast = globalIndex === timeline.length - 1;
   return (
     <motion.div
       className="group relative flex flex-col items-center text-center p-6 rounded-2xl border h-full transition-shadow duration-300 hover:shadow-md"
@@ -128,8 +114,10 @@ function TimelineRow({ items, indices, reversed }: {
 }
 
 export default function ThePlan() {
+  const mid = Math.ceil(timeline.length / 2);
+
   return (
-    <section id="the-plan" className="py-20 px-6 bg-white relative overflow-hidden">
+    <section id="the-plan" className="pt-12 pb-12 px-6 bg-white relative overflow-hidden">
       <div className="absolute top-0 left-0 w-64 h-64 bg-pink-50 rounded-full mix-blend-multiply filter blur-3xl opacity-30 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-yellow-50 rounded-full mix-blend-multiply filter blur-3xl opacity-30 translate-x-1/3 translate-y-1/3 pointer-events-none" />
 
@@ -143,21 +131,29 @@ export default function ThePlan() {
         >
           <h2 className="text-4xl md:text-6xl font-serif font-bold text-[#e63946] mb-4">The Plan</h2>
           <div className="w-24 h-1 bg-[#d4af37] mx-auto mb-4" />
-          <p className="text-gray-500 font-sans italic text-sm">The morning, planned down to the minute.</p>
+          <p className="text-gray-500 font-sans italic text-sm">The morning, exactly as it happened.</p>
         </motion.div>
 
-        {/* Steps 1–4: left → right */}
-        <TimelineRow items={timeline.slice(0, 4)} indices={[0, 1, 2, 3]} />
+        {/* Mobile: natural order 1→8 in a 2-col grid */}
+        <div className="grid grid-cols-2 gap-3 md:hidden">
+          {timeline.map((item, i) => (
+            <StepCard key={item.time} item={item} globalIndex={i} delay={i * 0.08} />
+          ))}
+        </div>
 
-        {/* Drop-down connector on the right */}
-        <SnakeConnector />
-
-        {/* Steps 8–5: right → left (snake reversal) */}
-        <TimelineRow
-          items={[...timeline.slice(4, 8)].reverse()}
-          indices={[7, 6, 5, 4]}
-          reversed
-        />
+        {/* Desktop: snake layout — Steps 1–4 left→right, then 8–5 right→left */}
+        <div className="hidden md:block">
+          <TimelineRow
+            items={timeline.slice(0, mid)}
+            indices={timeline.slice(0, mid).map((_, i) => i)}
+          />
+          <SnakeConnector />
+          <TimelineRow
+            items={[...timeline.slice(mid)].reverse()}
+            indices={[...timeline.slice(mid).map((_, i) => mid + i)].reverse()}
+            reversed
+          />
+        </div>
       </div>
     </section>
   );

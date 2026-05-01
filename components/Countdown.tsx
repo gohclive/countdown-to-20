@@ -2,53 +2,104 @@
 
 import { useState, useEffect, useCallback } from 'react';
 
-interface TimeLeft {
+// Proposal moment: April 20, 2026 at 10:00 AM Amsterdam Time (CEST = UTC+2)
+const PROPOSAL_TIME = new Date('2026-04-20T10:00:00+02:00').getTime();
+
+interface TimeUnit {
   days: number;
   hours: number;
   minutes: number;
   seconds: number;
 }
 
-export default function Countdown() {
-  const calculateTimeLeft = useCallback(() => {
-    // Target date: April 20, 2026, at 00:00:00 Amsterdam Time (CET/CEST)
-    // Amsterdam is UTC+1 (CET) or UTC+2 (CEST).
-    // In April 2026, it will be CEST (UTC+2).
-    const targetDate = new Date('2026-04-20T00:00:00+02:00').getTime();
-    const now = new Date().getTime();
-    const difference = targetDate - now;
+interface CountdownState {
+  time: TimeUnit;
+  completed: boolean;
+}
 
-    if (difference <= 0) {
-      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-    }
+function computeState(): CountdownState {
+  const now = Date.now();
+  const diff = PROPOSAL_TIME - now;
 
+  if (diff > 0) {
     return {
-      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-      minutes: Math.floor((difference / 1000 / 60) % 60),
-      seconds: Math.floor((difference / 1000) % 60),
+      completed: false,
+      time: {
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((diff / 1000 / 60) % 60),
+        seconds: Math.floor((diff / 1000) % 60),
+      },
     };
-  }, []);
+  }
 
-  const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null);
+  // Count up — elapsed time since the proposal moment
+  const elapsed = now - PROPOSAL_TIME;
+  return {
+    completed: true,
+    time: {
+      days: Math.floor(elapsed / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((elapsed / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((elapsed / 1000 / 60) % 60),
+      seconds: Math.floor((elapsed / 1000) % 60),
+    },
+  };
+}
+
+interface Props {
+  onComplete?: () => void;
+}
+
+export default function Countdown({ onComplete }: Props) {
+  const [state, setState] = useState<CountdownState | null>(null);
+  const onCompleteRef = useCallback(() => onComplete?.(), [onComplete]);
 
   useEffect(() => {
-    setTimeLeft(calculateTimeLeft());
-    const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
+    const tick = () => {
+      const next = computeState();
+      setState(prev => {
+        if (!prev?.completed && next.completed) onCompleteRef();
+        return next;
+      });
+    };
 
-    return () => clearInterval(timer);
-  }, [calculateTimeLeft]);
+    // setTimeout(0) avoids synchronous setState directly in the effect body
+    const initId = setTimeout(tick, 0);
+    const timer = setInterval(tick, 1000);
 
-  if (!timeLeft) return <div className="h-20" />; // Prevent layout shift
+    return () => {
+      clearTimeout(initId);
+      clearInterval(timer);
+    };
+  }, [onCompleteRef]);
+
+  if (!state) return <div className="h-20" />;
+
+  if (state.completed) {
+    return (
+      <div className="flex flex-col items-center gap-3">
+        <p className="text-sm md:text-base font-sans uppercase tracking-widest text-[#e63946] opacity-80">
+          and counting&hellip;
+        </p>
+        <div className="flex justify-center gap-4 md:gap-8 text-center">
+          <TimeUnit value={state.time.days} label="Days" />
+          <TimeUnit value={state.time.hours} label="Hours" />
+          <TimeUnit value={state.time.minutes} label="Minutes" />
+          <TimeUnit value={state.time.seconds} label="Seconds" />
+        </div>
+        <p className="text-xs md:text-sm font-serif italic text-gray-600 mt-1">
+          since we said yes to forever
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex justify-center gap-4 md:gap-8 text-center">
-      <TimeUnit value={timeLeft.days} label="Days" />
-      <TimeUnit value={timeLeft.hours} label="Hours" />
-      <TimeUnit value={timeLeft.minutes} label="Minutes" />
-      <TimeUnit value={timeLeft.seconds} label="Seconds" />
+      <TimeUnit value={state.time.days} label="Days" />
+      <TimeUnit value={state.time.hours} label="Hours" />
+      <TimeUnit value={state.time.minutes} label="Minutes" />
+      <TimeUnit value={state.time.seconds} label="Seconds" />
     </div>
   );
 }

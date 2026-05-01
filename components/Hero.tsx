@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { MapPin } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore, useState } from 'react';
 import Countdown from './Countdown';
 import SaveToCalendar from './SaveToCalendar';
 
@@ -133,8 +133,9 @@ function TulipField() {
 }
 
 export default function Hero() {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
+  // Returns false on the server, true on the client — SSR-safe without useEffect
+  const mounted = useSyncExternalStore(() => () => {}, () => true, () => false);
+  const [engaged, setEngaged] = useState(false);
 
   return (
     <section className="relative h-[100vh] flex items-start justify-center text-center overflow-hidden pt-[18vh]">
@@ -183,12 +184,13 @@ export default function Hero() {
         className="z-10 px-6 max-w-4xl"
       >
         <motion.h1
-          className="text-4xl md:text-7xl font-serif font-bold text-[#e63946] mb-4 drop-shadow-sm whitespace-nowrap"
+          key={engaged ? 'engaged' : 'countdown'}
+          className="text-4xl md:text-7xl font-serif font-bold text-[#e63946] mb-4 drop-shadow-sm"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 1.2 }}
         >
-          A Beautiful Beginning
+          {engaged ? 'We\'re Engaged!' : 'A Beautiful Beginning'}
         </motion.h1>
 
         <motion.div
@@ -197,28 +199,65 @@ export default function Hero() {
           transition={{ delay: 0.8, duration: 1 }}
           className="flex flex-col items-center gap-2 mb-8"
         >
-          <p className="text-lg md:text-2xl font-serif italic text-gray-800 tracking-wide">
-            Save the Date: April 20, 2026
-          </p>
-          <div className="flex items-center gap-2 text-[#e63946] font-serif font-semibold">
-            <MapPin size={20} />
-            <span>Keukenhof Gardens, Amsterdam</span>
-          </div>
-          <p className="text-[10px] md:text-xs text-gray-500 font-sans tracking-tight opacity-70">
-            *All events are scheduled in Amsterdam Time (GMT+2).
-          </p>
+          {engaged ? (
+            <>
+              <p className="text-lg md:text-2xl font-serif italic text-gray-800 tracking-wide">
+                She said yes at Keukenhof Gardens
+              </p>
+              <div className="flex items-center gap-2 text-[#e63946] font-serif font-semibold">
+                <MapPin size={20} />
+                <span>April 20, 2026 · Amsterdam</span>
+              </div>
+              <p className="text-sm md:text-base font-serif italic text-gray-600 mt-1">
+                Clive &amp; Charlene — engaged
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-lg md:text-2xl font-serif italic text-gray-800 tracking-wide">
+                Save the Date: April 20, 2026
+              </p>
+              <div className="flex items-center gap-2 text-[#e63946] font-serif font-semibold">
+                <MapPin size={20} />
+                <span>Keukenhof Gardens, Amsterdam</span>
+              </div>
+              <p className="text-[10px] md:text-xs text-gray-500 font-sans tracking-tight opacity-70">
+                *All events are scheduled in Amsterdam Time (GMT+2).
+              </p>
+            </>
+          )}
         </motion.div>
 
         <div className="mb-12">
-          <Countdown />
+          <Countdown onComplete={() => setEngaged(true)} />
         </div>
 
+        {!engaged && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.5, duration: 1 }}
+          >
+            <SaveToCalendar />
+          </motion.div>
+        )}
+      </motion.div>
+
+      {/* Scroll down arrow */}
+      <motion.div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2, duration: 1 }}
+      >
+        <span className="text-sm font-sans font-bold uppercase tracking-widest" style={{ color: '#e63946', opacity: 0.65 }}>scroll</span>
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 1 }}
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <SaveToCalendar />
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e63946" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.65 }}>
+            <path d="M12 5v14M5 12l7 7 7-7" />
+          </svg>
         </motion.div>
       </motion.div>
 

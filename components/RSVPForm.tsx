@@ -3,6 +3,8 @@
 import { motion } from 'framer-motion';
 import { Send, Camera, Music, Video } from 'lucide-react';
 
+const TELEGRAM_URL = process.env.NEXT_PUBLIC_TELEGRAM_URL ?? 'https://t.me/';
+
 export default function RSVPForm() {
   return (
     <section id="rsvp" className="py-24 px-6 bg-[#fffcf5] relative overflow-hidden">
@@ -15,7 +17,7 @@ export default function RSVPForm() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            Write Her a Message
+            Help Me Surprise Her
           </motion.h2>
           <p className="text-gray-600 font-sans tracking-wide leading-relaxed">
             I would love to hear from you! Reach out to me directly on Telegram to share your well-wishes,
@@ -46,11 +48,11 @@ export default function RSVPForm() {
           </div>
 
           <p className="text-sm text-gray-500 italic font-sans px-4">
-            "Every message, every photo, and every voice note means the world to me."
+            &ldquo;I am carefully collating every heartfelt message and media file to present to Charlene as a collective gift from all of you.&rdquo;
           </p>
 
           <a
-            href="https://t.me/your_telegram_username"
+            href={TELEGRAM_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full py-4 bg-[#e63946] text-white font-sans font-bold rounded-xl hover:bg-[#d62828] transition-all shadow-md transform hover:-translate-y-1 flex items-center justify-center gap-2"

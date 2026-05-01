@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/lib
+/memory
+/photos
+/public/pokemon-cards
+/public/scrapbook
+messages.ods

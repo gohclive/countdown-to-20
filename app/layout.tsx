@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
+import Nav from "@/components/Nav";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -13,8 +14,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "A Beautiful Beginning | Save the Date",
-  description: "Join us for a special celebration at Keukenhof Gardens, Amsterdam.",
+  title: "Clive & Charlene 💍 | Our Love Story",
+  description: "She said yes! Follow our journey from proposal to forever.",
 };
 
 export default function RootLayout({
@@ -27,6 +28,7 @@ export default function RootLayout({
       <body
         className={`${playfair.variable} ${inter.variable} font-sans antialiased bg-[#fffcf5] text-gray-900`}
       >
+        <Nav />
         {children}
       </body>
     </html>

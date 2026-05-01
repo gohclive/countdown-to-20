@@ -3,47 +3,10 @@
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
+import { galleryCards } from '@/lib/data';
+import { EASE_OUT, TILT_SPRING } from '@/lib/constants';
 
-const cards = [
-  {
-    image: '/pokemon-cards/bali.png',
-    title: 'Bali Curse Breaker',
-    location: 'Bali',
-    year: '2022',
-    num: '1/4',
-    special: false,
-    caption: 'Our first trip overseas together',
-  },
-  {
-    image: '/pokemon-cards/norway.png',
-    title: 'Aurora Seeker',
-    location: 'Tromsø, Norway',
-    year: '2023',
-    num: '2/4',
-    special: false,
-    caption: 'Chasing the northern lights together',
-  },
-  {
-    image: '/pokemon-cards/perth.png',
-    title: 'Sunshine Overload',
-    location: 'Perth, Australia',
-    year: '2025',
-    num: '3/4',
-    special: false,
-    caption: 'Finding quokkas down under',
-  },
-  {
-    image: '/pokemon-cards/proposal.png',
-    title: 'Will You Marry Me?',
-    location: 'Amsterdam',
-    year: '2026',
-    num: '4/4',
-    special: true,
-    caption: 'The most important question',
-  },
-];
-
-type Card = (typeof cards)[number];
+type Card = (typeof galleryCards)[number];
 
 function Lightbox({ card, onClose }: { card: Card; onClose: () => void }) {
   useEffect(() => {
@@ -71,7 +34,7 @@ function Lightbox({ card, onClose }: { card: Card; onClose: () => void }) {
         initial={{ scale: 0.75, opacity: 0, y: 24 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.8, opacity: 0, y: 16 }}
-        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.35, ease: EASE_OUT }}
         onClick={(e) => e.stopPropagation()}
         className="relative z-10"
         style={{ maxHeight: '90vh' }}
@@ -102,8 +65,8 @@ function TiltCard({ card, index, onOpen }: { card: Card; index: number; onOpen: 
 
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
-  const rotateX = useSpring(useTransform(my, [-0.5, 0.5], [12, -12]), { stiffness: 350, damping: 35 });
-  const rotateY = useSpring(useTransform(mx, [-0.5, 0.5], [-12, 12]), { stiffness: 350, damping: 35 });
+  const rotateX = useSpring(useTransform(my, [-0.5, 0.5], [12, -12]), TILT_SPRING);
+  const rotateY = useSpring(useTransform(mx, [-0.5, 0.5], [-12, 12]), TILT_SPRING);
 
   function onMouseMove(e: React.MouseEvent<HTMLDivElement>) {
     const rect = cardRef.current?.getBoundingClientRect();
@@ -139,7 +102,7 @@ function TiltCard({ card, index, onOpen }: { card: Card; index: number; onOpen: 
       initial={{ opacity: 0, y: 50, scale: 0.88 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true }}
-      transition={{ delay: index * 0.14, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ delay: index * 0.14, duration: 0.7, ease: EASE_OUT }}
       className="flex flex-col items-center w-full"
     >
       <motion.div
@@ -229,7 +192,7 @@ export default function Gallery() {
   return (
     <section
       id="gallery"
-      className="py-24 px-6 relative overflow-hidden"
+      className="pt-12 pb-24 px-6 relative overflow-hidden"
       style={{
         background: 'linear-gradient(180deg, #fffcf5 0%, #fef9e0 45%, #fffcf5 100%)',
       }}
@@ -274,10 +237,31 @@ export default function Gallery() {
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
-        {cards.map((card, index) => (
+        {galleryCards.map((card, index) => (
           <TiltCard key={card.image} card={card} index={index} onOpen={() => setSelected(card)} />
         ))}
       </div>
+
+      {/* Artist attribution */}
+      <motion.p
+        className="text-center mt-12 text-xs font-sans text-gray-400"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.4, duration: 0.6 }}
+      >
+        Pokémon cards commissioned by{' '}
+        <a
+          href="https://www.instagram.com/littlewhitehouse90/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline underline-offset-2 hover:text-[#e63946] transition-colors"
+          style={{ color: '#b8860b' }}
+        >
+          @littlewhitehouse90
+        </a>
+        {' '}✨
+      </motion.p>
 
       <AnimatePresence>
         {selected && <Lightbox card={selected} onClose={() => setSelected(null)} />}
